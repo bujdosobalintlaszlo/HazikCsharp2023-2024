@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Ismetles
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //gyakorlas Embernek tobb keresztnev
+            StreamReader r = new StreamReader("nevek.txt");
+            List<Ember> emberek = new List<Ember>();
+            while(!r.EndOfStream)
+            {
+                List<string> adatok = r.ReadLine().Split(' ').ToList();
+                Ember sv = new Ember();
+                sv.vezetekNev = adatok[0];
+                sv.keresztNev = adatok[1];
+                if (sv.ReadLine() > 2)
+                {
+                    sv.masodikKeresztNev = adatok[2];
+                }
+                else
+                {
+                    sv.masodikKeresztNev = "";
+                }
+                emberek.Add(sv);
+            }
+            r.Close();
+            Console.ReadKey();
+        }
+    }
+    struct Ember
+    {
+       public string keresztNev, vezetekNev,masodikKeresztNev;
+    }
+}
