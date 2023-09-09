@@ -1,0 +1,63 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+namespace Leheto_legrovidebb
+{
+    class Program
+    {
+        static List<Ember> FajlBeolvasas(string utvonal, string fajlnev) =>File.ReadAllLines(Path.Combine(utvonal, fajlnev)).Select(sor =>{var adatok = sor.Split(' ');return new Ember{ vezetekNev = adatok[0],keresztNev = adatok.Skip(1).Where(a => a.Length > 1).ToList(),MunkaKor = adatok.Skip(1).Where(a => a.Length == 1 && a != "").Select(a => Convert.ToChar(a)).ToList()};}).ToList();
+        static void KiirasMonoGram(List<Ember> emberek) => emberek.ForEach(ember => Console.WriteLine(MonoGramEgysoros(ember)));
+        static string MonoGramEgysoros(Ember ember) => (ember.vezetekNev[0] + string.Concat(ember.keresztNev.Select(k => k[0]))).ToLower();
+        static void Kiiras(List<Ember> emberek) => Console.WriteLine(string.Join("\n", emberek.Select(ember => ember.vezetekNev + " " + string.Join(" ", ember.keresztNev) + " " + string.Join(" ", ember.MunkaKor))));
+        static void Main(string[] args){List<Ember> emberek = FajlBeolvasas("", "nevek.txt"); Kiiras(emberek);KiirasMonoGram(emberek);Console.ReadKey();}
+    }
+}
+struct Ember
+{
+    public string vezetekNev;public List<string> keresztNev;public List<char> MunkaKor;
+}
+---------------------------------------------------------------------------------------------------------------------------------
+
+Magyrazat:
+9.sor -> Path.Combine - utvonal, .Select ebbol valsztjuk ki, new Eberm-nél készül el egy ember az összes lehetséges tulajdonsággal.Majd a végén az egészet listává konvertáljuk.
+10.sor -> Kiirjuk az osszes monogramot foreach ciklus segítségével. (emberenként)
+11.sor -> Monodgarmot készítünk.
+Lépések:
+1. vesszük az aktuális vezetéknév 1. karakterét.
+2.Ezután hozzáfűzzük a keresztnév/keresztnevek első betűjét/betűit. A concat segítségével van összefűzve - Linq függvény).
+12.sor -> Egyszerű kiírás ami az emebreket írja ki minden rendelkező adatukkal.
+Lépések:
+1.Join segítségével először is összefűzzük és eneterekkel lesz elválasztva.(.Join -> A .Join metódus tehát az összekapcsolt elemekből egy új elemekből álló sorozatot hoz létre.)
+13.sor -> 
+
+---------------------------------------------------------------------------------------------------------------------------------
+(Van benne egy kis csalás mivel direkt minden 1 sorba van írva)
+A rendesen tagolt verzió:
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+namespace Rendesen_tagolt
+{
+    class Program
+    {
+        static List<Ember> FajlBeolvasas(string utvonal, string fajlnev) =>File.ReadAllLines(Path.Combine(utvonal, fajlnev)).Select(sor =>{var adatok = sor.Split(' ');
+            return new Ember{ 
+                vezetekNev = adatok[0],
+                keresztNev = adatok.Skip(1).Where(a => a.Length > 1).ToList(),
+                MunkaKor = adatok.Skip(1).Where(a => a.Length == 1 && a != "").Select(a => Convert.ToChar(a)).ToList()};}).ToList();
+        static void KiirasMonoGram(List<Ember> emberek) => emberek.ForEach(ember => Console.WriteLine(MonoGramEgysoros(ember)));
+        static string MonoGramEgysoros(Ember ember) => (ember.vezetekNev[0] + string.Concat(ember.keresztNev.Select(k => k[0]))).ToLower();
+        static void Kiiras(List<Ember> emberek) => Console.WriteLine(string.Join("\n", emberek.Select(ember => ember.vezetekNev + " " + string.Join(" ", ember.keresztNev) + " " + string.Join(" ", ember.MunkaKor))));
+        static void Main(string[] args){
+            List<Ember> emberek = FajlBeolvasas("", "nevek.txt");
+            Kiiras(emberek);KiirasMonoGram(emberek);
+            Console.ReadKey();}
+    }
+}
+struct Ember
+{
+    public string vezetekNev;public List<string> keresztNev;public List<char> MunkaKor;
+}
+
