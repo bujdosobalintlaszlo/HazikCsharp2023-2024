@@ -94,8 +94,9 @@ Lépések:
 2.Ezután hozzáfűzzük a keresztnév/keresztnevek első betűjét/betűit. A concat segítségével van összefűzve - Linq függvény).
 12.sor -> Egyszerű kiírás ami az emebreket írja ki minden rendelkező adatukkal.
 Lépések:
-1.Join segítségével először is összefűzzük és eneterekkel lesz elválasztva.(.Join -> A .Join metódus tehát az összekapcsolt elemekből egy új elemekből álló sorozatot hoz létre.)
-13.sor -> 
+1.Join segítségével először is összefűzzük és eneterekkel lesz elválasztva egymástól midegyik ember és adataik pedig
+szóközzel.(.Join -> A .Join metódus tehát az összekapcsolt elemekből egy új elemekből álló sorozatot hoz létre.)
+13.sor -> Ez a Main nevű eljárásunk ami a végrehajtásokért felelős, illetve az emebrek lista is itt helyezkedik el.
 
 ---------------------------------------------------------------------------------------------------------------------------------
 (Van benne egy kis csalás mivel direkt minden 1 sorba van írva)
@@ -124,6 +125,8 @@ namespace Rendesen_tagolt
 }
 struct Ember
 {
-    public string vezetekNev;public List<string> keresztNev;public List<char> MunkaKor;
+    public string vezetekNev;
+    public List<string> keresztNev;
+    public List<char> MunkaKor;
 }
 
