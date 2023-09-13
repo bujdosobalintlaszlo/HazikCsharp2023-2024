@@ -1,0 +1,71 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace hazi
+{
+    class Program
+    {
+        //a k 0 2 kerékcsere mind1 mettől meddig
+        //Beolvasni a menetrendet adatok elhelyezése kiírás, foglalási rendszer átgondolása/megírása
+        static List<Ember> FajlBeolvasas(string utvonal, string fajlnev)
+        {
+            StreamReader r = new StreamReader(utvonal + fajlnev);
+            List<Ember> emberek = new List<Ember>();
+            while (!r.EndOfStream)
+            {
+                List<string> adatok = r.ReadLine().Split(' ').ToList();
+                Ember sv = new Ember();
+                sv.vezetekNev = adatok[0];
+                sv.keresztNev = new List<string>();
+                sv.MunkaKor = new List<char>();
+                for (int i = 1; i < adatok.Count; i++)
+                {
+                    if (adatok[i].Length > 1)
+                    {
+                        sv.keresztNev.Add(adatok[i]);
+                    }
+                    else
+                    {
+                        sv.MunkaKor.Add(Convert.ToChar(adatok[i]));
+                    }
+                }
+                sv.munkaido = new List<bool>();
+                for (int i = 0; i < 10; i++)
+                {
+                    sv.munkaido.Add(true);
+                }
+                emberek.Add(sv);
+            }
+            r.Close();
+            return emberek;
+        }
+        static void KiirasMonoGram(List<Ember> emberek)
+        {
+            for (int i = 0; i < emberek.Count; i++)
+            {
+                Console.WriteLine(MonoGramEgysoros(emberek[i]));
+            }
+        }
+        static string MonoGramEgysoros(Ember ember) => (ember.vezetekNev[0] + string.Concat(ember.keresztNev.Select(k => k[0]))).ToLower();
+        static void Kiiras(List<Ember> emberek) => Console.WriteLine(string.Join("\n", emberek.Select(ember => ember.vezetekNev + " " + string.Join(" ", ember.keresztNev) + " " + string.Join(" ", ember.MunkaKor) + "" + string.Joint(" ", ember.munkaOra))));
+        static void Main(string[] args)
+        {
+            List<Ember> emberek = FajlBeolvasas("", "nevek.txt");
+            Kiiras(emberek);
+            Console.WriteLine();
+            KiirasMonoGram(emberek);
+            Console.ReadKey();
+        }
+    }
+}
+struct Ember
+{
+    public string vezetekNev;
+    public List<string> keresztNev;
+    public List<char> MunkaKor;
+    public List<bool> munkaido;
+}
