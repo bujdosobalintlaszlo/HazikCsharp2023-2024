@@ -33,6 +33,7 @@ namespace hazi
                         sv.MunkaKor.Add(Convert.ToChar(adatok[i]));
                     }
                 }
+                sv.munkaora = adatok[adatok.Count-1];
                 emberek.Add(sv);
             }
             r.Close();
@@ -46,7 +47,7 @@ namespace hazi
             }
         }
         static string MonoGramEgysoros(Ember ember) => (ember.vezetekNev[0] + string.Concat(ember.keresztNev.Select(k => k[0]))).ToLower();
-        static void Kiiras(List<Ember> emberek) => Console.WriteLine(string.Join("\n", emberek.Select(ember => ember.vezetekNev + " " + string.Join(" ", ember.keresztNev) + " " + string.Join(" ", ember.MunkaKor))));
+        static void Kiiras(List<Ember> emberek) => Console.WriteLine(string.Join("\n", emberek.Select(ember => ember.vezetekNev + " " + string.Join(" ", ember.keresztNev) + " " + string.Join(" ", ember.MunkaKor)+""+string.Joint(" ",ember.munkaOra))));
         static void Main(string[] args)
         {
             List<Ember> emberek = FajlBeolvasas("", "nevek.txt");
@@ -128,5 +129,6 @@ struct Ember
     public string vezetekNev;
     public List<string> keresztNev;
     public List<char> MunkaKor;
+    public int munkaOra;
 }
 
