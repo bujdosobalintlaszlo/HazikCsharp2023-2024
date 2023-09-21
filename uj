@@ -1,0 +1,162 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+namespace hazi
+{
+    public struct Ember
+    {
+        public string vnev;
+        public List<string> knev;
+        public string munkakor;
+        public List<bool> munkaido;
+    }
+    public struct Foglalas
+    {
+        public string munkakor;
+        public int mettol, meddig;
+    }
+    class Program
+    {
+        static List<Ember> fajlBeolvasas(string utvonal, string fajlnev)
+        {
+            StreamReader sr = new StreamReader(utvonal + fajlnev);
+            List<Ember> emberek = new List<Ember>();
+
+            while (!sr.EndOfStream)
+            {
+                List<string> adatok = sr.ReadLine().Split(' ').ToList();
+                Ember sv = new Ember();
+                sv.vnev = adatok[0];
+                sv.knev = new List<string>();
+                for (int i = 1; i < adatok.Count - 1; i++)
+                {
+                    sv.knev.Add(adatok[i]);
+                }
+                sv.munkakor = adatok.Last();
+                sv.munkaido = new List<bool>();
+                for (int i = 0; i < 10; i++)
+
+                {
+                    sv.munkaido.Add(true); 
+                }
+                emberek.Add(sv);
+            }
+            sr.Close();
+            return emberek;
+        }
+        static void kiirMonogram(List<Ember> emberek)
+        {
+            emberek.ForEach(ember => Console.WriteLine(Monogram(ember)));
+        }
+
+        static string Monogram(Ember e)
+        {
+            return e.vnev[0] + string.Concat(e.knev.Select(k => k[0]));
+        }
+
+        static void kiiratas(List<Ember> emberek)
+        {
+            Console.WriteLine(string.Join("\n", emberek.Select(ember => ember.vnev + " " + string.Join(" ", ember.knev))));
+        }
+        static List<Foglalas> FajlBeolv2(string fajlnev)
+        {
+            StreamReader r = new StreamReader(fajlnev);
+            List<Foglalas> l = new List<Foglalas>();
+            while (!r.EndOfStream)
+            {
+                List<string> adatok = r.ReadLine().Split(' ').ToList();
+                Foglalas sv = new Foglalas();
+                sv.munkakor = adatok[0];
+                sv.mettol = int.Parse(adatok[1]);
+                sv.meddig = int.Parse(adatok[2]);
+                l.Add(sv);
+            }
+            r.Close();
+            return l;
+        }
+        /*
+        static string MunkakorNeve()
+        {
+            if ()
+            { 
+            
+            }
+        }
+        */
+        static void Main(string[] args)
+        {
+            List<Ember> emberek = fajlBeolvasas("", "nevek.txt");
+            kiiratas(emberek);
+            kiirMonogram(emberek);
+            List<Foglalas> foglalasok = FajlBeolv2("menetrend.txt");
+            foreach (var foglalas in foglalasok)
+            {
+                List<Ember> munkakor = emberek.FindAll(x => x.munkakor == foglalas.munkakor).OrderByDescending(a => a.munkaido.Where(y => y).Count()).ToList();
+                int i = 0;
+                while (i < munkakor.Count && !TudunkFoglalni(munkakor, i, foglalas))
+                {
+                    i++;
+                }
+                if (i < munkakor.Count)
+                {
+                    for (int j = foglalas.mettol - 8; j <= foglalas.meddig - 8; j++)
+                    {
+                        munkakor[i].munkaido[j] = false;
+
+                    }
+                    
+                    Console.WriteLine("siker");
+                    
+                    Tablazat(emberek);
+                }
+                else
+                {
+                    
+                    Console.WriteLine("nem siker");
+                    Tablazat(emberek);
+                }
+            }
+            Console.ReadKey();
+        }
+        /*
+        static string egyEmberKir(Ember e)
+        { 
+            return Monogram(e) + " " + 
+        }
+        */
+
+        static void Tablazat(List<Ember> l1)
+        {
+            foreach (var item in l1)
+            {
+                Console.WriteLine(string.Join(" ", item.knev) + " " + string.Join(" ", item.vnev) + " " + string.Join(" ", MegVizsgal(item.munkaido))); 
+            } 
+        }
+        static List<string> MegVizsgal(List<bool> m)
+        {
+            List<string> retvals = new List<string>();
+            foreach (var item in m)
+            {
+                if (item == true)
+                {
+                    retvals.Add("+");
+                }
+                else
+                {
+                    retvals.Add("-");
+                }
+            }
+            return retvals;
+        }
+        static bool TudunkFoglalni(List<Ember> l, int hanyadik, Foglalas foglalas)
+        {
+         
+            return l.Select(x => new { munkaKor = x, db = x.munkaido.Select((y, ind) => new { munkaido = y, index = ind }).Where(y => y.index >= foglalas.mettol - 8 && y.index <= foglalas.meddig - 8).Where(y => y.munkaido).Count() }).Any(x => x.db == foglalas.meddig - foglalas.mettol + 1);
+        }
+    }
+}
