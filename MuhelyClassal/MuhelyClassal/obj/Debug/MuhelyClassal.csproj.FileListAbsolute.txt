@@ -1,0 +1,11 @@
+H:\MuhelyClassal\MuhelyClassal\bin\Debug\MuhelyClassal.exe.config
+H:\MuhelyClassal\MuhelyClassal\bin\Debug\MuhelyClassal.exe
+H:\MuhelyClassal\MuhelyClassal\bin\Debug\MuhelyClassal.pdb
+H:\MuhelyClassal\MuhelyClassal\obj\Debug\MuhelyClassal.csproj.AssemblyReference.cache
+H:\MuhelyClassal\MuhelyClassal\obj\Debug\MuhelyClassal.csproj.CoreCompileInputs.cache
+H:\MuhelyClassal\MuhelyClassal\obj\Debug\MuhelyClassal.exe
+H:\MuhelyClassal\MuhelyClassal\obj\Debug\MuhelyClassal.pdb
+C:\Users\User\Desktop\MuhelyClassal\MuhelyClassal\obj\Debug\MuhelyClassal.csproj.AssemblyReference.cache
+C:\Users\User\Desktop\MuhelyClassal\MuhelyClassal\obj\Debug\MuhelyClassal.csproj.CoreCompileInputs.cache
+C:\Users\User\Desktop\MuhelyClassal\MuhelyClassal\obj\Debug\MuhelyClassal.exe
+C:\Users\User\Desktop\MuhelyClassal\MuhelyClassal\obj\Debug\MuhelyClassal.pdb
