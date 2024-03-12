@@ -1,0 +1,21 @@
+   static void Main(string[] args)
+   {
+       Console.Write("Szam: ");
+       int num=Convert.ToInt32(Console.ReadLine());
+       int proba = 0;
+       int min = 1000;
+       int max = 9999;
+       while (min <= max){
+           int tipp = (min + max) / 2;
+           proba++;
+           if (tipp == num){
+               Console.WriteLine($"Szam:{num} probak szama:{proba}");
+               Console.ReadKey();
+               break;
+           }else if (tipp < num){
+               min = tipp + 1;
+           }else{
+               max = tipp - 1;
+           }
+       }
+   }
