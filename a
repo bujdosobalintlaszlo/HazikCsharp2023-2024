@@ -1,0 +1,104 @@
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Json_cucc
+{
+    public partial class Form1 : Form
+    {
+        private DataGridView dataGridView1;
+        Random r = new Random();
+        public Form1()
+        {
+            InitializeComponent();
+            dataGridView1 = new DataGridView();
+            dataGridView1.Dock = DockStyle.Fill;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Columns.Add("ProductId", "Product ID");
+            dataGridView1.Columns.Add("ProductName", "Product Name");
+            dataGridView1.ReadOnly = true;
+            dataGridView1.AllowDrop = false;
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AllowUserToDeleteRows = false;
+            this.Controls.Add(dataGridView1);
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            Task<string> call = GetMemberProductsAsync("ervin.kobor@gmail.com", "gulyasleves");
+            string apiResponse = await call;
+            try
+            {
+                ApiResp parsedResp = JsonSerializer.Deserialize<ApiResp>(apiResponse);
+                if (parsedResp != null && parsedResp.Data != null)
+                {
+                    List<(string, string)> products = CreateListFromRespData(parsedResp);
+
+                    PopulateDataGridView(products);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            int maxX = this.ClientSize.Width - button1.Width;
+            int maxY = this.ClientSize.Height - button1.Height;
+            button1.Location = new Point(r.Next(0, maxX), r.Next(0, maxY));
+
+        }
+
+        private void PopulateDataGridView(List<(string, string)> products)
+        {
+            dataGridView1.Rows.Clear();
+            foreach (var product in products)
+            {
+                dataGridView1.Rows.Add(product.Item1, product.Item2);
+            }
+        }
+
+        public List<(string, string)> CreateListFromRespData(ApiResp data)
+        {
+            List<(string, string)> list = new List<(string, string)>();
+            foreach (var product in data.Data)
+            {
+                list.Add((product.ProductId, product.ProductName));
+            }
+            return list;
+        }
+
+        public async Task<string> GetMemberProductsAsync(string email, string apiPw)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string url = $"https://platonestudio.com/seamfeed/get_member_products.php?member={email}&apipw={apiPw}";
+                HttpResponseMessage resp = await client.GetAsync(url);
+                resp.EnsureSuccessStatusCode();
+                string jsonResp = await resp.Content.ReadAsStringAsync();
+                return jsonResp;
+            }
+        }
+    }
+
+    public class ApiResp
+    {
+        [JsonPropertyName("status")]
+        public string Status { get; set; }
+
+        [JsonPropertyName("data")]
+        public List<Product> Data { get; set; }
+    }
+
+    public class Product
+    {
+        [JsonPropertyName("productid")]
+        public string ProductId { get; set; }
+
+        [JsonPropertyName("productname")]
+        public string ProductName { get; set; }
+    }
+}
